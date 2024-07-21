@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        /* Style the chat container */
+        .chat-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 0 auto;
+            max-width: 400px;
+        }
+
+        /* Style the user message */
+        .user-message {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Style the bot message */
+        .bot-message {
+            background-color: #e0f7fa;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <div id="chat-box"></div>
+        <input type="text" id="user-input" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        // Function to send message to server
+        function sendMessage() {
+            var userMessage = document.getElementById("user-input").value;
+            appendUserMessage(userMessage); // Display user message in chat box
+            document.getElementById("user-input").value = ""; // Clear input field
+
+            // Send message to server
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'message=' + encodeURIComponent(userMessage)
+            })
+                .then(response => response.text())
+                .then(data => appendBotMessage(data)); // Display bot's response in chat box
+        }
+
+        // Function to display user message in chat box
+        function appendUserMessage(message) {
+            var chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += '<div class="user-message">' + message + '</div>';
+        }
+
+        // Function to display bot message in chat box
+        function appendBotMessage(message) {
+            var chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += '<div class="bot-message">' + message + '</div>';
+        }
+    </script>
+</body>
+
+</html>
